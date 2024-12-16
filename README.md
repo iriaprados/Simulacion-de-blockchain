@@ -90,5 +90,5 @@ Productor del bloque: Nodo 3
 Hash del bloque anterior: 0
 ...
 
-[!NOTE]
-Los pesos de selección para los nodos pueden ajustarse modificando el diccionario probabilidades: probabilidades = {"Nodo 1": 50, "Nodo 2": 30, "Nodo 3": 20}
+> [!NOTE]
+> Los pesos de selección para los nodos pueden ajustarse modificando el diccionario probabilidades: probabilidades = {"Nodo 1": 50, "Nodo 2": 30, "Nodo 3": 20}
