@@ -31,19 +31,19 @@ def proof_of_stake():
 
     seleccion = random.choices(nodos, weights=pesos, k=1)[0]  # Selección del nodo basado en los pesos definidos en el diccionario
 
-    print(f'\nProbabilidades de selección de los nodos: {probabilidades}')
-    print(f'El nodo seleccionado para la producción del bloque es el {seleccion}\n')
+    # print(f'\nProbabilidades de selección de los nodos: {probabilidades}')
+    # print(f'El nodo seleccionado para la producción del bloque es el {seleccion}\n')
 
     return seleccion
 
 
 # Función para la sección crítica, simula creación del bloque 
 def critical_section(productor, particiones, mutex):
-    print(f'\nEl nodo {productor} intenta acceder a la sección crítica del bloque')
+    print(f'{productor} accedió a la sección crítica ...')
 
     mutex.acquire()  # Abrir mutex
 
-    print(f'El nodo productor {productor} tiene el mutex')
+    print(f'{productor} adquirió el lock en tiempo {int(time.time())}')
 
     if blockchain:
         bloque_anterior = blockchain[-1]  # Si en la blockchain hay un bloque anterior se captura
@@ -69,21 +69,23 @@ def critical_section(productor, particiones, mutex):
 
     time.sleep(2) # Simulación del trabajo 
 
+    print(f'{productor} ha creado el bloque {nuevo_bloque.index}')
     mutex.release() # Liberar el mutex
-
-    print(f'Bloque {nuevo_bloque.index} producido, el nodo {productor} liberado el mutex\n')
+    print(f'{productor} ha liberado la sección crítica')
 
 # Función para definir el compartamiento de lso nodos 
 def run_node(productor, mutex): 
-    print(f'El nodo {productor} ha sido iniciado')
+    print(f'{productor} iniciado\n')
+
+    time.sleep(0.5) # Retraso entre la impresión y el comienzo del ciclo 
 
     while len(blockchain) < blocks: # Mientras la blockchain contenga menos bloques que el objetivo (12) 
-        print(f'El nodo {productor}, esta esperando para producir un bloque')
+        print(f'{productor} está esperando para producir un bloque')
 
         nodo_productor = proof_of_stake()
 
         if nodo_productor == productor: 
-            print(f'El nodo {productor} ha sido seleccionado para producir un bloque') 
+            print(f'{productor} ha sido seleccionado para producir el bloque {len(blockchain)}') 
             critical_section(productor, len(blockchain), mutex)
         time.sleep(1)
 
@@ -99,19 +101,10 @@ def main():
         hilo.join()
     
      # Imprimir la cadena de bloques una vez todos los bloques hayan sido producidos
-    print("\nBlockchain generada:")
+    print("\nCADENA DE BLOQUES FINAL:")
     for block in blockchain:
-        print(f"Índice: {block.index}, Timestamp: {block.timestamp}, Hash: {block.block_hash}, Productor: {block.validator}, Hash previo: {block.previous_hash}")
-    
-  
-
-
+        print(f"\nÍndice: {block.index} \nTimestamp: {block.timestamp} \nHash del bloque: {block.block_hash} \nProductor del bloque: {block.validator} \nHash del bloque anterior: {block.previous_hash}")
+ 
 if __name__ == "__main__":
-    # # Crear el bloque génesis
-    # genesis_block = block(0, time.time(), "hash_inicial", None, "Node-1")
-    # blockchain.append(genesis_block)  # Añadir el bloque génesis
-
-    # print(genesis_block)  # Muestra los datos del bloque génesis
-
     # Llamar a la función principal
     main()
